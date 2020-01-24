@@ -1,12 +1,6 @@
----
-output:
-  html_document:
-    keep_md: yes
----
+This repository contains a few handy R functions. The section below is under construction but illustrates how to use some of the functions.
 
-
-
-# Create publication-ready tables summarizing a linear model fit
+## Create publication-ready tables summarizing a linear model fit
 
 Use these functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
 
