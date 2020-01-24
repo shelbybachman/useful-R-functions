@@ -1,0 +1,118 @@
+---
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+
+rm(list=ls())
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE)
+
+library(rprojroot)
+
+path <- function(x) find_root_file(x, criterion = has_file('useful-R-functions.Rproj'))
+source(path('create-lm-table.R'))
+source(path('create-lm-summary.R'))
+
+```
+
+# Create publication-ready tables summarizing a linear model fit
+
+Use these functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
+
+```{r load_data, eval = TRUE, echo = FALSE}
+
+head(iris)
+
+```
+
+These functions have a few dependencies, which I load below:
+
+```{r load_packages}
+
+library(dplyr)
+library(weights)
+library(stringr)
+library(tidyr)
+
+```
+
+Consider the case of a simple multiple linear regression analysis. For the `iris` dataset, I examine whether petal length and/or petal width are associated with sepal length:
+
+```{r lm_overall}
+
+lm.overall <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
+
+```
+
+The call to `create_lm_table` below generates a dataframe displaying the coefficients, their standard errors and confidence intervals, and associated *t*- and *p*-values. The first argument is the output of the call to the `lm` function. The second argument `include.intercept = 1` is included to indicate that I would like a row indicating these values for the intercept term. The third argument `vector.of.term.names` allows me to customize the names of the terms that will be displayed in the first column of the dataframe
+
+```{r lm_overall_table}
+
+create_lm_table(lm.object = lm.overall, 
+                include.intercept = 1, 
+                vector.of.term.names = c('Intercept', 'Petal Length', 'Petal Width'))
+
+```
+
+The call to `create_lm_summary` below generates a string summarizing the fit of the regression model. This function takes only one argument, the output of the call to the `lm` function: 
+
+```{r lm_overall_summary}
+
+create_lm_summary(lm.object = lm.overall)
+
+```
+
+Finally, I use the `kableExtra` package to combine these outputs into a single, publication-ready table:
+
+```{r lm_overall_kable}
+
+library(kableExtra)
+table_overall <- create_lm_table(lm.object = lm.overall, 
+                                 include.intercept = 1, 
+                                 vector.of.term.names = c('Intercept', 'Petal Length', 'Petal Width'))
+kable(table_overall) %>%
+  kable_styling(full_width = F,
+                'striped',
+                position = 'left') %>%
+  pack_rows(str_c(create_lm_summary(lm.object = lm.overall)),
+            1, nrow(table_overall))
+
+```
+
+Next, I consider the case of a regression analysis with multiple groups, where I might want to create a table in which coefficients, etc. for each group are stacked on top of one another. I use the `iris` dataset again, this time performing a separate regression of petal length and width on sepal length, for each iris species separately:
+
+```{r lm_groups}
+
+lm.setosa <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris %>% filter(Species == 'setosa'))
+lm.versicolor <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris %>% filter(Species == 'versicolor'))
+lm.virginica <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris %>% filter(Species == 'virginica'))
+
+```
+
+I consolidate the steps above to create a single, composite table summarizing the output of all three model fits:
+
+```{r lm_groups_kable}
+
+table_setosa <- create_lm_table(lm.object = lm.setosa, 
+                                 include.intercept = 1, 
+                                 vector.of.term.names = c('Intercept', 'Petal Length', 'Petal Width'))
+table_versicolor <- create_lm_table(lm.object = lm.versicolor, 
+                                 include.intercept = 1, 
+                                 vector.of.term.names = c('Intercept', 'Petal Length', 'Petal Width'))
+table_virginica <- create_lm_table(lm.object = lm.virginica, 
+                                 include.intercept = 1, 
+                                 vector.of.term.names = c('Intercept', 'Petal Length', 'Petal Width'))
+
+kable(as.data.frame(rbind(table_setosa,
+                          table_versicolor,
+                          table_virginica))) %>%
+  kable_styling(full_width = F, 'striped', position = 'left') %>%
+  pack_rows(str_c('Setosa, ', create_lm_summary(lm.object = lm.setosa), sep = ''), 1, nrow(table_setosa)) %>%
+  pack_rows(str_c('Versicolor, ', create_lm_summary(lm.object = lm.versicolor), sep = ''), nrow(table_setosa)+1, nrow(table_setosa)+nrow(table_versicolor)) %>%
+  pack_rows(str_c('Virginica, ', create_lm_summary(lm.object = lm.virginica), sep = ''), nrow(table_setosa)+nrow(table_versicolor)+1, nrow(table_setosa)+nrow(table_versicolor)+nrow(table_virginica))
+
+```

@@ -23,7 +23,7 @@ create_lm_summary <- function(lm.object) {
         r_squared_adj <- round(summary_temp$adj.r.squared, digits = 3)
 
         # set up statement with model fit summary
-        results_summary <- str_c('(F(', df1, ', ', df2, ') = ', f, ', p', p, ', ', 'R^2 = ', r_squared, ', adjusted R^2 = ', r_squared_adj, ')', sep = '')
+        results_summary <- str_c('F(', df1, ', ', df2, ') = ', f, ', p', p, ', ', 'R^2 = ', r_squared, ', adjusted R^2 = ', r_squared_adj, sep = '')
 
         # output to return
         return(results_summary)
