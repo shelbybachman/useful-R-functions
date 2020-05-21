@@ -1,8 +1,49 @@
-This repository contains a few handy R functions. The section below is under construction but illustrates how to use some of the functions.
+---
+output:
+  html_document:
+    keep_md: yes
+    toc: true
+---
 
-## Create publication-ready tables summarizing a linear model fit
 
-Use these functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
+
+# check_collinearity
+
+This function **checks two variables in a dataframe for extreme collinearity**. Given a dataframe and two variables of interest within that dataframe, it returns values of $R^2$, tolerance, and a variance inflation factor (VIF), as well as these values superimposed on a scatterplot showing a linear regression line through the data.
+
+
+```r
+check_collinearity(swiss, 'Agriculture', 'Education')[[4]]
+```
+
+![](README_files/figure-html/example_collinearity-1.png)<!-- -->
+
+# check_outliers
+
+This function **checks a variable in a dataframe for outliers**. The function detects outliers using the MAD-median rule, returns the row indices of those outliers, and also displays a boxplot showing outliers identified according to the (non-robust) boxplot rule.
+
+
+```r
+ggpubr::ggarrange(check_outliers(swiss, 'Agriculture')[[2]], 
+                   check_outliers(swiss, 'Education')[[2]])
+```
+
+![](README_files/figure-html/example_outliers-1.png)<!-- -->
+
+# check_normality
+
+This function **checks a variable in a dataframe for normality**. The function returns values of skewness, kurtosis, and displays these values along with two plots: a frequency distribution with the mean indicated with a dashed line, and a normal probability plot.
+
+
+```r
+check_normality(swiss, 'Agriculture')[[4]]
+```
+
+![](README_files/figure-html/example_normality-1.png)<!-- -->
+
+# create_lm_table
+
+This function **creates a publication-ready table summarizing a linear model fit**. Use this functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
 
 
 ```

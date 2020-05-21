@@ -23,8 +23,7 @@ check_outliers <- function(data, var) {
   } else {
     message <- paste('MAD-median rule detected ', 
                      sum(data[,'outlier'] == TRUE), 
-                     ' outlier(s) at row(s): ', 
-                     output[[1]], sep = '')
+                     ' outlier(s) ', sep = '')
   }
   
   output[[2]] <- ggplot2::ggplot(data = data,
