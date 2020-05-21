@@ -1,4 +1,4 @@
-check-outliers <- function(data, var) {
+check_outliers <- function(data, var) {
   # this function detects outliers
   # using the MAD-median rule,
   # and shows a plot with outliers

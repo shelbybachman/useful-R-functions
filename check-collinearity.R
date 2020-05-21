@@ -1,4 +1,4 @@
-check-collinearity <- function(data, var1, var2) {
+check_collinearity <- function(data, var1, var2) {
   # this function calculates R squared, 
   # tolerance, and VIF for two variables,
   # prints a message about collinearity,

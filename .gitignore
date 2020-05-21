@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+create-population-plot.R
+create-population-pyramid.R
