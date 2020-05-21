@@ -1,15 +1,10 @@
----
-output:
-  html_document:
-    keep_md: yes
-    toc: true
----
+
 
 
 
 # check_collinearity
 
-This function **checks two variables in a dataframe for extreme collinearity**. Given a dataframe and two variables of interest within that dataframe, it returns values of $R^2$, tolerance, and a variance inflation factor (VIF), as well as these values superimposed on a scatterplot showing a linear regression line through the data.
+This function **checks two variables in a dataframe for extreme collinearity**. Given a dataframe and two variables of interest within that dataframe, it returns values of R-squared, tolerance, and a variance inflation factor (VIF), as well as these values superimposed on a scatterplot showing a linear regression line through the data.
 
 
 ```r
