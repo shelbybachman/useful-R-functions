@@ -51,7 +51,7 @@ check_normality <- function(data, name, colour = "#40a070") {
       ggplot2::labs(subtitle = output[[3]]) +
       ggpubr::theme_pubr(),
     nrow = 1, ncol = 2)
-  output[[4]] <- annotate_figure(output[[4]], 
+  output[[4]] <- ggpubr::annotate_figure(output[[4]], 
                   top = text_grob(paste('Normality Check: ', name, sep = ''), face = 'bold', size = 14))
   return(output) 
   
