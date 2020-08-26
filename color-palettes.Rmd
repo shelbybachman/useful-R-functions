@@ -1,0 +1,56 @@
+---
+title: 'a few cool color palettes'
+author: 'shelby bachman'
+output: html_document
+html_document:
+  theme: flatly
+  highlight: default
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE,
+                      warnings = FALSE,
+                      message = FALSE,
+                      fig.align = 'left',
+                      fig.width = 8)
+
+library(scales)
+library(ggplot2)
+library(ggpubr)
+
+```
+
+```{r palette_1_show}
+
+palette_1 <- c('#ED6A5A', '#E5DF61', '#9BC1BC', '#5D576B')
+
+data <- data.frame(
+  num = c(1,1,1,1),
+  order = c(1,2,3,4),
+  col = palette_1
+)
+data$col <- factor(data$col, levels = palette_1)
+
+ggplot(data, aes(x = reorder(col, order), y = num)) +
+  geom_point(aes(colour = col), size = 60) +
+  geom_text(aes(label = col), colour = 'black', family = 'Lato', size = 6) +
+  scale_colour_manual(values = palette_1) +
+  guides(colour = FALSE) +
+  labs(x = '', y = '') +
+  theme_pubr() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
+
+```
+
+<details><summary>code</summary>
+
+```{r palette_1_code, echo = TRUE, eval = FALSE}
+
+c('#ED6A5A', '#E5DF61', '#9BC1BC', '#5D576B')
+
+```
+
+</details>
