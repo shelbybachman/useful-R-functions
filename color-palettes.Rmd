@@ -12,8 +12,7 @@ html_document:
 knitr::opts_chunk$set(echo = FALSE,
                       warnings = FALSE,
                       message = FALSE,
-                      fig.align = 'left',
-                      fig.width = 8)
+                      fig.align = 'left')
 
 library(scales)
 library(ggplot2)
@@ -21,7 +20,7 @@ library(ggpubr)
 
 ```
 
-```{r palette_1_show}
+```{r palette_1_show, fig.width = 8}
 
 palette_1 <- c('#ED6A5A', '#E5DF61', '#9BC1BC', '#5D576B')
 
@@ -50,6 +49,40 @@ ggplot(data, aes(x = reorder(col, order), y = num)) +
 ```{r palette_1_code, echo = TRUE, eval = FALSE}
 
 c('#ED6A5A', '#E5DF61', '#9BC1BC', '#5D576B')
+
+```
+
+</details>
+
+```{r palette_2_show, fig.width = 10}
+
+palette_2 <- c('#667761', '#545E56', '#917C78', '#B79492', '#EAE1DF')
+
+data <- data.frame(
+  num = c(1,1,1,1,1),
+  order = c(1,2,3,4,5),
+  col = palette_2
+)
+data$col <- factor(data$col, levels = palette_2)
+
+ggplot(data, aes(x = reorder(col, order), y = num)) +
+  geom_point(aes(colour = col), size = 60) +
+  geom_text(aes(label = col), colour = 'black', family = 'Lato', size = 6) +
+  scale_colour_manual(values = palette_2) +
+  guides(colour = FALSE) +
+  labs(x = '', y = '') +
+  theme_pubr() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank())
+
+```
+
+<details><summary>code</summary>
+
+```{r palette_2_code, echo = TRUE, eval = FALSE}
+
+c('#667761', '#545E56', '#917C78', '#B79492', '#EAE1DF')
 
 ```
 
