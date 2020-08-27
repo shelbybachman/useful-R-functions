@@ -29,9 +29,9 @@ check_normality <- function(data, name, colour = "#40a070") {
     'One or more metrics is NA. Check plots!'
   } else if (skew_index > 3 | skew_index < -3 | 
              kurtosis_index > 10 | kurtosis_index < -10) {
-    'Skew/kurtosis indicate severe non-normality!'
+    'Severe non-normality indicated!'
   } else {
-    'Metrics do not indicate severe non-normality. \nCheck plots!'
+    'Severe non-normality not indicated'
   }
   
   data_plot <- as.data.frame(data)
@@ -52,7 +52,8 @@ check_normality <- function(data, name, colour = "#40a070") {
       ggpubr::theme_pubr(),
     nrow = 1, ncol = 2)
   output[[4]] <- ggpubr::annotate_figure(output[[4]], 
-                  top = text_grob(paste('Normality Check: ', name, sep = ''), face = 'bold', size = 14))
+                  top = ggpubr::text_grob(paste('Normality Check: ', name, sep = ''), 
+                                          face = 'bold', size = 14))
   return(output) 
   
 }

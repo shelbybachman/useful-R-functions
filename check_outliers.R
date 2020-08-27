@@ -30,7 +30,8 @@ check_outliers <- function(data, name, colour = '#6ec499') {
   data_plot <- as.data.frame(data)
   output[[2]] <- ggplot2::ggplot(data = data_plot,
                                  ggplot2::aes(y = data)) +
-    ggplot2::geom_boxplot(fill = colour, alpha = 0.5, width = 0.3, position = ggplot2::position_dodge(width = 0.5),
+    ggplot2::geom_boxplot(fill = colour, alpha = 0.5, width = 0.3, 
+                          position = ggplot2::position_dodge(width = 0.5),
                           outlier.size = 3) +
     ggplot2::labs(x = '', y = name, subtitle = message) +
     ggpubr::theme_pubr() +

@@ -1,62 +1,36 @@
 ---
+title: "R functions to organize linear model output"
+author: "shelby bachman"
 output:
   html_document:
-    keep_md: yes
-    toc: true
+    theme: flatly
+    highlight: zenburn
+    toc: no
 ---
-
+<hr>
 ```{r setup, include=FALSE}
 
 rm(list=ls())
 knitr::opts_chunk$set(
   warning = FALSE,
-  message = FALSE)
+  message = FALSE, 
+  echo = TRUE)
 
-library(rprojroot)
+library(here)
 
 path <- function(x) find_root_file(x, criterion = has_file('useful-R-functions.Rproj'))
-source(path('create-lm-table.R'))
-source(path('create-lm-summary.R'))
-source(path('check-collinearity.R'))
-source(path('check-outliers.R'))
-source(path('check-normality.R'))
+
+source(here('create_lm_table.R'))
+source(here('create_lm_summary.R'))
 
 ```
 
-# check_collinearity
+Functions described below: 
 
-This function **checks two variables in a dataframe for extreme collinearity**. Given a dataframe and two variables of interest within that dataframe, it returns values of $R^2$, tolerance, and a variance inflation factor (VIF), as well as these values superimposed on a scatterplot showing a linear regression line through the data.
+- `create_lm_table()` / [source code](https://raw.githubusercontent.com/shelbybachman/useful-R-tools/master/create_lm_table.R)
+- `create_lm_summary()` / [source code](https://raw.githubusercontent.com/shelbybachman/useful-R-tools/master/create_lm_summary.R)
 
-```{r example_collinearity, eval = TRUE, echo = TRUE}
-
-check_collinearity(swiss, 'Agriculture', 'Education')[[4]]
-
-```
-
-# check_outliers
-
-This function **checks a variable in a dataframe for outliers**. The function detects outliers using the MAD-median rule, returns the row indices of those outliers, and also displays a boxplot showing outliers identified according to the (non-robust) boxplot rule.
-
-```{r example_outliers, eval = TRUE, echo = TRUE}
-
-ggpubr::ggarrange(check_outliers(swiss, 'Agriculture')[[2]], 
-                   check_outliers(swiss, 'Education')[[2]])
-
-```
-
-# check_normality
-
-This function **checks a variable in a dataframe for normality**. The function returns values of skewness, kurtosis, and displays these values along with two plots: a frequency distribution with the mean indicated with a dashed line, and a normal probability plot.
-
-```{r example_normality}
-
-check_normality(swiss, 'Agriculture')[[4]]
-
-```
-
-# create_lm_table
-
-This function **creates a publication-ready table summarizing a linear model fit**. Use this functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
+These functions **create a publication-ready table summarizing a linear model fit**. Use these functions if you have fit a linear model in R using the `lm` function and would like to compile the results into a concise set of metrics. To illustrate how to use these functions, I will use data from the `iris` dataset that comes built-in with R:
 
 ```{r load_data, eval = TRUE, echo = FALSE}
 
@@ -83,7 +57,7 @@ lm.overall <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
 
 ```
 
-The call to `create_lm_table` below generates a dataframe displaying the coefficients, their standard errors and confidence intervals, and associated *t*- and *p*-values. The first argument is the output of the call to the `lm` function. The second argument `include.intercept = 1` is included to indicate that I would like a row indicating these values for the intercept term. The third argument `vector.of.term.names` allows me to customize the names of the terms that will be displayed in the first column of the dataframe
+The call to `create-lm-table()` below generates a dataframe displaying the coefficients, their standard errors and confidence intervals, and associated *t*- and *p*-values. The first argument is the output of the call to the `lm` function. The second argument `include.intercept = 1` is included to indicate that I would like a row indicating these values for the intercept term. The third argument `vector.of.term.names` allows me to customize the names of the terms that will be displayed in the first column of the dataframe
 
 ```{r lm_overall_table}
 
@@ -93,7 +67,7 @@ create_lm_table(lm.object = lm.overall,
 
 ```
 
-The call to `create_lm_summary` below generates a string summarizing the fit of the regression model. This function takes only one argument, the output of the call to the `lm` function: 
+The call to `create-lm-summary()` below generates a string summarizing the fit of the regression model, specifically the $R^2$ and adjusted $R^2$ values, and the *F* statistic for the model fit as well as its degrees of freedom. This function takes only one argument, the output of the call to the `lm` function: 
 
 ```{r lm_overall_summary}
 

@@ -1,0 +1,74 @@
+---
+title: "R functions for data diagnostics"
+author: "shelby bachman"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    toc: no
+---
+<hr>
+
+```{r setup, include=FALSE}
+
+rm(list=ls())
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = TRUE)
+
+library(here)
+
+source(here('check_collinearity.R'))
+source(here('check_outliers.R'))
+source(here('check_normality.R'))
+
+```
+
+Functions described below: 
+
+- `check_normality()` / [source code](https://raw.githubusercontent.com/shelbybachman/useful-R-tools/master/check_normality.R)
+- `check_outliers()` / [source code](https://raw.githubusercontent.com/shelbybachman/useful-R-tools/master/check_outliers.R)
+- `check_collinearity()` / [source code](https://raw.githubusercontent.com/shelbybachman/useful-R-tools/master/check-collinearity.R)
+
+These functions **perform checks of parametric assumptions** and **detect outliers**. These functions have a few dependencies which need to be installed but not loaded: `ggplot2` and `ggpubr`. To illustrate how to use these functions, I will use data from the `swiss` dataset that comes built-in with R:
+
+```{r load_data, eval = TRUE, echo = FALSE}
+
+head(swiss)
+
+```
+
+# check_normality()
+
+This function **checks data contained in a vector for normality**. The function takes a vector as input and returns values of skewness (`output[[1]]`), kurtosis (`output[[2]]`), a message about whether severe non-normality is indicated (`output[[3]]`), and displays these values along with two plots (`output[[4]]`): a frequency distribution with the mean indicated with a dashed line, and a normal probability plot. It takes two mandatory arguments, a vector of values `data` and a name for the data `name`, as well as an optional argument `colour` specifying the color for the plots (it uses mint green by default).
+
+```{r example_normality}
+
+check_normality(data = swiss$Agriculture, name = 'Agriculture')[[4]]
+
+```
+
+# check_outliers()
+
+This function **checks data contained in a vector for outliers**. The function detects outliers using the MAD-median rule, returns the row indices of those outliers (`output[[1]]`), and also displays a boxplot showing outliers identified according to the (non-robust) boxplot rule (`output[[2]]`). It takes two mandatory arguments, a vector of values `data` and a name for the data `name`, as well as an optional argument `colour` specifying the color for the plots (it uses mint green by default).
+
+```{r example_outliers, eval = TRUE, echo = TRUE}
+
+ggpubr::ggarrange(check_outliers(data = swiss$Agriculture, name = 'Agriculture')[[2]], 
+                   check_outliers(data = swiss$Education, name = 'Education')[[2]])
+
+```
+
+# check_collinearity()
+
+This function **checks two variables in a dataframe for extreme collinearity**. Given a dataframe and two variables of interest within that dataframe, it returns values of $R^2$ (`output[[1]]`), tolerance (`output[[2]]`), and a variance inflation factor (VIF) (`output[[3]]`), as well as these values superimposed on a scatterplot showing a linear regression line through the data (`output[[4]]`). It takes three arguments, a dataframe `data` as well as the names of two variables in the dataframe as the subsequent arguments.
+
+```{r example_collinearity, eval = TRUE, echo = TRUE}
+
+check_collinearity(swiss, 'Agriculture', 'Education')[[4]]
+
+```
+
+
+
