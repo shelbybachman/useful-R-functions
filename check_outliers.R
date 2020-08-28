@@ -18,9 +18,7 @@ check_outliers <- function(data, name, colour = '#6ec499') {
   output <- vector('list', 2)
   output[[1]] <- which(outliers == 1)
   if (length(output[[1]]) == 0) {
-    message <- paste('MAD-median rule detected ', 
-                     sum(outliers == 1), 
-                     ' outliers', sep = '')
+    message <- paste('MAD-median rule detected no outliers', sep = '')
   } else {
     message <- paste('MAD-median rule detected ', 
                      sum(outliers == 1), 
