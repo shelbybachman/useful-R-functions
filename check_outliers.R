@@ -12,7 +12,7 @@ check_outliers <- function(data, name, colour = '#6ec499') {
   
   sample_median <- median(data, na.rm = TRUE)
   sample_mad <- mad(data, na.rm = TRUE)
-  mad_med <- ifelse(is.na(data), NA, data - sample_median / (1.483 * sample_mad))
+  mad_med <- ifelse(is.na(data), NA, ((data - sample_median) / (1.483 * sample_mad)))
   outliers <- ifelse(mad_med > 2.24, 1, 0)
   
   output <- vector('list', 2)
